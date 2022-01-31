@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>books app</title>
+</head>
+
+<body>
+    <form>
+        <input type="text" id="inputBox1" />
+        <input type="text" id="inputBox2" />
+        <input type="text" id="inputBox3" />
+        <input type="submit" value="ADD" id="button" />
+    </form>
+
+    <div id="container"></div>
+</body>
+
+</html>
+
+<script>
+    document.querySelector("form").addEventListener("submit", ch);
+
+    function ch(event) {
+        var inputBox2 = document.querySelector("#inputBox2").value;
+        var inputBox3 = document.querySelector("#inputBox3").value;
+        var inputBox1 = document.querySelector("#inputBox1").value;
+        event.preventDefault();
+        let data = {
+            book: inputBox1,
+            author: inputBox2,
+            comments: inputBox3,
+            name: "r"
+        };
+
+        fetch("https://json-server-mocker-masai.herokuapp.com/tasks", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: { "Content-type": "application/json; charset=UTF-8" },
+        })
+            .then((response) => response.json())
+            .then(function (json) {
+                fetchData();
+            })
+            .catch((err) => console.log(err));
+    }
+    function fetchData() {
+        fetch("https://json-server-mocker-masai.herokuapp.com/tasks", {
+            method: "GET",
+            headers: { "Content-type": "application/json;charset=UTF-8" },
+        })
+            .then((response) => response.json())
+            .then(function (json) {
+                console.log(json)
+                display(json);
+            })
+            .catch((err) => console.log(err));
+    }
+    fetchData();
+    var container = document.querySelector("#container");
+    function display(json) {
+        container.innerHTML = "";
+        json.forEach(function (el) {
+            if (el.name == "r") {
+                var elem1 = document.createElement("h1")
+                var elem2 = document.createElement("h1");
+                var elem3 = document.createElement("input")
+                elem1.textContent = el.book;
+                elem2.textContent = el.author;
+                elem3.textContent = el.comments;
+                container.append(elem1, elem2, elem3);
+            }
+        });
+    }
+</script>
